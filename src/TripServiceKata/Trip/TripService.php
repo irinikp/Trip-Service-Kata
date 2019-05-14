@@ -10,7 +10,7 @@ class TripService
 {
     public function getTripsByUser(User $user) {
         $tripList = array();
-        $loggedUser = UserSession::getInstance()->getLoggedUser();
+        $loggedUser = $this->getLoggedUser();
         $isFriend = false;
         if ($loggedUser != null) {
             foreach ($user->getFriends() as $friend) {
@@ -20,11 +20,28 @@ class TripService
                 }
             }
             if ($isFriend) {
-                $tripList = TripDAO::findTripsByUser($user);
+                $tripList = $this->findTripsByUser($user);
             }
             return $tripList;
         } else {
             throw new UserNotLoggedInException();
         }
+    }
+
+    protected function getLoggedUser(): ?User
+    {
+        $loggedUser = UserSession::getInstance()->getLoggedUser();
+        return $loggedUser;
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return array<Trip>
+     */
+    protected function findTripsByUser(User $user): array
+    {
+        $tripList = TripDAO::findTripsByUser($user);
+        return $tripList;
     }
 }
