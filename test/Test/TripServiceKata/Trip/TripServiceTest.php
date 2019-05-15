@@ -5,77 +5,69 @@ namespace Test\TripServiceKata\Trip;
 use PHPUnit\Framework\TestCase;
 use TripServiceKata\Exception\UserNotLoggedInException;
 use TripServiceKata\Trip\Trip;
-use TripServiceKata\Trip\TripService;
-use TripServiceKata\User\User;
+
+require __DIR__ . '/../../../../vendor/autoload.php';
 
 class TripServiceTest extends TestCase
 {
-    private const GUEST = null;
     /**
-     * @var TripService
+     * @var UserBuilder
      */
-    private $tripService;
-    private $user;
-    private $friend;
-
-
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->friend = new User('friend_name');
-        $this->tripService = \Mockery::mock(TripService::class)->makePartial()->shouldAllowMockingProtectedMethods();
-    }
+    private $user_builder;
 
     public function test_should_throw_an_exception_when_user_is_not_logged_in()
     {
-        $this->user = self::GUEST;
-        $this->tripService->shouldReceive('getLoggedUser')->andReturn($this->user);
+        $this->user_builder->createGuestUser()
+            ->createOtherUser()
+            ->bind();
 
         $this->expectException(UserNotLoggedInException::class);
 
-        $this->tripService->getTripsByUser($this->friend);
+        $this->user_builder->getTripService()->getTripsByUser($this->user_builder->getFriend());
     }
 
     public function test_should_return_an_empty_list_when_user_has_no_friends()
     {
-        $this->user = new User('username');
-        $this->tripService->shouldReceive('getLoggedUser')->andReturn($this->user);
-        $this->friend = \Mockery::mock(User::class);
-        $this->friend->shouldReceive('getFriends')->andReturn([]);
+        $this->user_builder->createMainUser()
+            ->createOtherUser()
+            ->dontCreateFriendship()
+            ->bind();
 
-        $trip_list = $this->tripService->getTripsByUser($this->friend);
+        $trip_list = $this->user_builder->getTripService()->getTripsByUser($this->user_builder->getFriend());
 
         $this->assertEmpty($trip_list);
     }
 
     public function test_should_return_friends_trips_when_users_are_friends_single_trip_version()
     {
-        $this->user = new User('username');
-        $trip = new Trip();
-        $this->tripService->shouldReceive('getLoggedUser')->andReturn($this->user);
-        $this->friend = \Mockery::mock(User::class);
-        $this->friend->shouldReceive('getFriends')->andReturn([$this->user]);
-        $this->tripService->shouldReceive('findTripsByUser')->withArgs([$this->friend])->andReturn([$trip]);
+        $this->user_builder->createMainUser()
+            ->createOtherUser()
+            ->createFriendship()
+            ->createTrips(new Trip())
+            ->bind();
 
-        $trip_list = $this->tripService->getTripsByUser($this->friend);
+        $trip_list = $this->user_builder->getTripService()->getTripsByUser($this->user_builder->getFriend());
 
-        $this->assertEquals([$trip], $trip_list);
+        $this->assertEquals($this->user_builder->getTrips(), $trip_list);
     }
 
     public function test_should_return_friends_trips_when_users_are_friends_multiple_trips_version()
     {
-        $this->user = new User('username');
-        $trip1 = new Trip();
-        $trip2 = new Trip();
-        $this->tripService->shouldReceive('getLoggedUser')->andReturn($this->user);
-        $this->friend = \Mockery::mock(User::class);
-        $this->friend->shouldReceive('getFriends')->andReturn([$this->user]);
-        $this->tripService->shouldReceive('findTripsByUser')->withArgs([$this->friend])->andReturn([$trip1, $trip2]);
+        $this->user_builder->createMainUser()
+            ->createOtherUser()
+            ->createFriendship()
+            ->createTrips(new Trip(), new Trip())
+            ->bind();
 
-        $trip_list = $this->tripService->getTripsByUser($this->friend);
+        $trip_list = $this->user_builder->getTripService()->getTripsByUser($this->user_builder->getFriend());
 
-        $this->assertEquals([$trip1, $trip2], $trip_list);
+        $this->assertEquals($this->user_builder->getTrips(), $trip_list);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->user_builder = new UserBuilder();
     }
 
 }
