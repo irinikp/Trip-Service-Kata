@@ -27,7 +27,7 @@ class UserSessionTest extends TestCase
     public function test_isUserLoggedIn_throws_exception()
     {
         $this->expectException(DependentClassCalledDuringUnitTestException::class);
-        UserSession::getInstance()->isUserLoggedIn(new User('user_name'));
+        UserSession::getInstance()->isUserLoggedIn(new User());
     }
 
     public function test_getLoggedUser_throws_exception()

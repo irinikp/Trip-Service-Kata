@@ -18,7 +18,7 @@ class UserTest extends TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->user = new User('user_name');
+        $this->user = new User();
     }
 
     public function test_new_user_has_no_friends()
@@ -33,15 +33,15 @@ class UserTest extends TestCase
 
     public function test_when_adding_a_friend_it_is_contained_in_friends_list()
     {
-        $friend = new User('friend_name');
+        $friend = new User();
         $this->user->addFriend($friend);
         $this->assertContains($friend, $this->user->getFriends());
     }
 
     public function test_friends_list_contains_all_added_friends()
     {
-        $friend1 = new User('friend_name1');
-        $friend2 = new User('friend_name2');
+        $friend1 = new User();
+        $friend2 = new User();
         $this->user->addFriend($friend1);
         $this->user->addFriend($friend2);
         $this->assertEquals([$friend1, $friend2], $this->user->getFriends());
@@ -49,8 +49,8 @@ class UserTest extends TestCase
 
     public function test_not_friend_user_in_not_contained_in_friends_list()
     {
-        $friend1    = new User('friend_name1');
-        $non_friend = new User('non_friend_name');
+        $friend1    = new User();
+        $non_friend = new User();
         $this->user->addFriend($friend1);
         $this->assertNotContains($non_friend, $this->user->getFriends());
     }

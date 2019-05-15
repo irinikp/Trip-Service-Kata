@@ -36,7 +36,7 @@ class MockUserBuilder
      */
     public function createMainUser(): MockUserBuilder
     {
-        $this->user = new User('user_name');
+        $this->user = new User();
         return $this;
     }
 

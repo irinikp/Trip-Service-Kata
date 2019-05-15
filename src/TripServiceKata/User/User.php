@@ -4,36 +4,81 @@ namespace TripServiceKata\User;
 
 use TripServiceKata\Trip\Trip;
 
+/**
+ * Class User
+ * @package TripServiceKata\User
+ */
 class User
 {
+    /**
+     * @var array<Trip>
+     */
     private $trips;
+    /**
+     * @var array<User>
+     */
     private $friends;
+    /**
+     * @var string
+     */
     private $name;
 
-    public function __construct($name)
+    /**
+     * User constructor.
+     *
+     */
+    public function __construct()
     {
-        $this->name = $name;
-        $this->trips = array();
-        $this->friends = array();
+        $this->name    = '';
+        $this->trips   = [];
+        $this->friends = [];
     }
 
-    public function getTrips()
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return array<Trip>
+     */
+    public function getTrips(): array
     {
         return $this->trips;
     }
 
-    public function getFriends()
+    /**
+     * @return array<User>
+     */
+    public function getFriends(): array
     {
         return $this->friends;
     }
 
-    public function addFriend(User $user)
+    /**
+     * @param User $user
+     */
+    public function addFriend(User $user): void
     {
-        $this->friends[] = $user;
+        array_push($this->friends, $user);
     }
 
-    public function addTrip(Trip $trip)
+    /**
+     * @param Trip $trip
+     */
+    public function addTrip(Trip $trip): void
     {
-        $this->trips[] = $trip;
+        array_push($this->trips, $trip);
     }
 }

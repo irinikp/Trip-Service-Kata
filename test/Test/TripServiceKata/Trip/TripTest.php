@@ -14,7 +14,7 @@ class TripTest extends TestCase
     public function test_find_trips_by_user_throws_exception()
     {
         $this->expectException(DependentClassCalledDuringUnitTestException::class);
-        TripDAO::findTripsByUser(new User('user_name'));
+        TripDAO::findTripsByUser(new User());
 
     }
 }
