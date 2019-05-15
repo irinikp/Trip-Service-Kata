@@ -3,6 +3,7 @@
 namespace Test\TripServiceKata\Trip;
 
 use PHPUnit\Framework\TestCase;
+use Test\TripServiceKata\User\MockUserBuilder;
 use TripServiceKata\Exception\UserNotLoggedInException;
 use TripServiceKata\Trip\Trip;
 
@@ -11,7 +12,7 @@ require __DIR__ . '/../../../../vendor/autoload.php';
 class TripServiceTest extends TestCase
 {
     /**
-     * @var UserBuilder
+     * @var MockUserBuilder
      */
     private $user_builder;
 
@@ -67,7 +68,7 @@ class TripServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->user_builder = new UserBuilder();
+        $this->user_builder = new MockUserBuilder();
     }
 
 }

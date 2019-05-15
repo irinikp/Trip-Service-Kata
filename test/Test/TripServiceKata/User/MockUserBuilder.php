@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Test\TripServiceKata\Trip;
+namespace Test\TripServiceKata\User;
 
 
 use Mockery\LegacyMockInterface;
@@ -9,7 +9,7 @@ use TripServiceKata\Trip\Trip;
 use TripServiceKata\Trip\TripService;
 use TripServiceKata\User\User;
 
-class UserBuilder
+class MockUserBuilder
 {
     private const GUEST = null;
 
@@ -32,27 +32,27 @@ class UserBuilder
 
 
     /**
-     * @return UserBuilder
+     * @return \Test\TripServiceKata\Trip\MockUserBuilder
      */
-    public function createMainUser(): UserBuilder
+    public function createMainUser(): MockUserBuilder
     {
         $this->user = new User('user_name');
         return $this;
     }
 
     /**
-     * @return UserBuilder
+     * @return MockUserBuilder
      */
-    public function createGuestUser(): UserBuilder
+    public function createGuestUser(): MockUserBuilder
     {
         $this->user = self::GUEST;
         return $this;
     }
 
     /**
-     * @return UserBuilder
+     * @return MockUserBuilder
      */
-    public function logUserInService(): UserBuilder
+    public function logUserInService(): MockUserBuilder
     {
         $this->tripService = \Mockery::mock(TripService::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->tripService->shouldReceive('getLoggedUser')->andReturn($this->user);
@@ -60,27 +60,27 @@ class UserBuilder
     }
 
     /**
-     * @return UserBuilder
+     * @return MockUserBuilder
      */
-    public function createFriendship(): UserBuilder
+    public function createFriendship(): MockUserBuilder
     {
         $this->friend->shouldReceive('getFriends')->andReturn([$this->user]);
         return $this;
     }
 
     /**
-     * @return UserBuilder
+     * @return MockUserBuilder
      */
-    public function dontCreateFriendship(): UserBuilder
+    public function dontCreateFriendship(): MockUserBuilder
     {
         $this->friend->shouldReceive('getFriends')->andReturn([]);
         return $this;
     }
 
     /**
-     * @return UserBuilder
+     * @return MockUserBuilder
      */
-    public function createOtherUser(): UserBuilder
+    public function createOtherUser(): MockUserBuilder
     {
         $this->friend = \Mockery::mock(User::class);
         return $this;
@@ -105,9 +105,9 @@ class UserBuilder
     /**
      * @param array<Trip> $trips
      *
-     * @return UserBuilder
+     * @return MockUserBuilder
      */
-    public function withTrips($trips): UserBuilder
+    public function withTrips($trips): MockUserBuilder
     {
         $this->trips = $trips;
         $this->tripService->shouldReceive('findTripsByUser')->withArgs([$this->friend])->andReturn($trips);
