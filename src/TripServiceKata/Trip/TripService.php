@@ -23,7 +23,7 @@ class TripService
      */
     protected function findTripsByUser(User $user): array
     {
-        $tripList = TripDAO::findTripsByUser($user);
+        $tripList = (new TripDAO())->tripsByUser($user);
         return $tripList;
     }
 
