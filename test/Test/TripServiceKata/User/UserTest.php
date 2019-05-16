@@ -86,4 +86,16 @@ class UserTest extends TestCase
         $this->assertTrue($this->user->isFriendWith($friend));
         $this->assertTrue($friend->isFriendWith($this->user));
     }
+
+    public function test_isFriendWith_returns_false_when_2_users_are_not_friends()
+    {
+        $friend = new User();
+        $this->assertFalse($this->user->isFriendWith($friend));
+        $this->assertFalse($friend->isFriendWith($this->user));
+    }
+
+    public function test_isFriendWith_returns_false_when_input_user_does_not_exist()
+    {
+        $this->assertFalse($this->user->isFriendWith(null));
+    }
 }
