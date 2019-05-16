@@ -72,6 +72,7 @@ class User
     public function addFriend(User $user): void
     {
         array_push($this->friends, $user);
+        array_push($user->friends, $this);
     }
 
     /**
@@ -91,6 +92,6 @@ class User
     {
         return (null === $friend) ?
             false :
-            contains($this->getFriends(), $friend);
+            in_array($friend, $this->getFriends());
     }
 }

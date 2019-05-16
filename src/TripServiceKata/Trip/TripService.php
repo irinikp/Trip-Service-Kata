@@ -25,25 +25,6 @@ class TripService
     }
 
     /**
-     * @param User      $user1
-     * @param User|null $user2
-     *
-     * @return bool
-     */
-    protected function areFriends(User $user1, ?User $user2): bool
-    {
-        $isFriend = false;
-        if (null === $user2) return $isFriend;
-        foreach ($user1->getFriends() as $friend) {
-            if ($friend == $user2) {
-                $isFriend = true;
-                break;
-            }
-        }
-        return $isFriend;
-    }
-
-    /**
      * @return array
      */
     protected function noTrips(): array

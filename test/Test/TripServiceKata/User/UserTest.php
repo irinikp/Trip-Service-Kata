@@ -78,4 +78,12 @@ class UserTest extends TestCase
         $this->user->addTrip($trip1);
         $this->assertNotContains($non_added_trip, $this->user->getTrips());
     }
+
+    public function test_isFriendWith_returns_true_when_2_users_are_friends()
+    {
+        $friend = new User();
+        $this->user->addFriend($friend);
+        $this->assertTrue($this->user->isFriendWith($friend));
+        $this->assertTrue($friend->isFriendWith($this->user));
+    }
 }
