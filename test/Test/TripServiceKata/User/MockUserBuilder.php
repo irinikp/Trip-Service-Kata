@@ -6,6 +6,7 @@ namespace Test\TripServiceKata\User;
 
 use Mockery\LegacyMockInterface;
 use TripServiceKata\Trip\Trip;
+use TripServiceKata\Trip\TripDAO;
 use TripServiceKata\Trip\TripService;
 use TripServiceKata\User\User;
 
@@ -22,7 +23,7 @@ class MockUserBuilder
      */
     protected $friend;
     /**
-     * @var LegacyMockInterface
+     * @var TripService
      */
     protected $tripService;
     /**
@@ -84,10 +85,11 @@ class MockUserBuilder
 
     public function bind()
     {
-        $this->tripService = \Mockery::mock(TripService::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $trip_dao = \Mockery::mock(TripDAO::class);
         if (!empty($this->trips)) {
-            $this->tripService->shouldReceive('findTripsByUser')->withArgs([$this->friend])->andReturn($this->trips);
+            $trip_dao->shouldReceive('tripsByUser')->withArgs([$this->friend])->andReturn($this->trips);
         }
+        $this->tripService = new TripService($trip_dao);
         return $this->user;
     }
 
@@ -99,7 +101,9 @@ class MockUserBuilder
     public function withTrips($trips): MockUserBuilder
     {
         $this->trips = $trips;
-        $this->tripService->shouldReceive('findTripsByUser')->withArgs([$this->friend])->andReturn($trips);
+        $trip_dao    = \Mockery::mock(TripDAO::class);
+        $trip_dao->shouldReceive('tripsByUser')->withArgs([$this->friend])->andReturn($trips);
+        $this->tripService = new TripService($trip_dao);
         return $this;
     }
 
@@ -152,15 +156,15 @@ class MockUserBuilder
     }
 
     /**
-     * @return LegacyMockInterface
+     * @return TripService
      */
-    public function getTripService(): LegacyMockInterface
+    public function getTripService(): TripService
     {
         return $this->tripService;
     }
 
     /**
-     * @param LegacyMockInterface $tripService
+     * @param TripService $tripService
      */
     public function setTripService($tripService): void
     {

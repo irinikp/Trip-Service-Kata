@@ -8,24 +8,30 @@ use TripServiceKata\Exception\UserNotLoggedInException;
 
 class TripService
 {
+    protected $trip_dao;
+
+    public function __construct(TripDAO $trip_dao)
+    {
+        $this->trip_dao = $trip_dao;
+    }
+
     public function getTripsByUser(User $user, ?User $loggedInUser)
     {
         if ($loggedInUser === null) {
             throw new UserNotLoggedInException();
         }
-        return $this->areFriends($user, $loggedInUser) ? $this->findTripsByUser($user) : $this->noTrips();
+        return $this->areFriends($user, $loggedInUser) ? $this->trip_dao->tripsByUser($user) : $this->noTrips();
     }
 
-    /**
-     * @param User $user
-     *
-     * @return array<Trip>
-     */
-    protected function findTripsByUser(User $user): array
-    {
-        $tripList = (new TripDAO())->tripsByUser($user);
-        return $tripList;
-    }
+//    /**
+//     * @param User $user
+//     *
+//     * @return array<Trip>
+//     */
+//    protected function findTripsByUser(User $user): array
+//    {
+//        return $this->trip_dao->tripsByUser($user);
+//    }
 
     /**
      * @param User      $user1
