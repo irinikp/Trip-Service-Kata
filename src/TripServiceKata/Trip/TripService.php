@@ -8,25 +8,15 @@ use TripServiceKata\Exception\UserNotLoggedInException;
 
 class TripService
 {
-    public function getTripsByUser(User $user) {
-        $tripList = array();
-        $loggedUser = $this->getLoggedUser();
-        $isFriend = false;
-        if ($loggedUser != null) {
-            foreach ($user->getFriends() as $friend) {
-                if ($friend == $loggedUser) {
-                    $isFriend = true;
-                    break;
-                }
-            }
-            if ($isFriend) {
-                $tripList = $this->findTripsByUser($user);
-            }
-            return $tripList;
-        } else {
+    public function getTripsByUser(User $user)
+    {
+        $loggedInUser = $this->getLoggedUser();
+        if ($loggedInUser === null) {
             throw new UserNotLoggedInException();
         }
+        return $this->areFriends($user, $loggedInUser) ? $this->findTripsByUser($user) : $this->noTrips();
     }
+
 
     protected function getLoggedUser(): ?User
     {
@@ -43,5 +33,32 @@ class TripService
     {
         $tripList = TripDAO::findTripsByUser($user);
         return $tripList;
+    }
+
+    /**
+     * @param User      $user1
+     * @param User|null $user2
+     *
+     * @return bool
+     */
+    protected function areFriends(User $user1, ?User $user2): bool
+    {
+        $isFriend = false;
+        if (null === $user2) return $isFriend;
+        foreach ($user1->getFriends() as $friend) {
+            if ($friend == $user2) {
+                $isFriend = true;
+                break;
+            }
+        }
+        return $isFriend;
+    }
+
+    /**
+     * @return array
+     */
+    protected function noTrips(): array
+    {
+        return [];
     }
 }

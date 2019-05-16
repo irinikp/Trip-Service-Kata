@@ -27,7 +27,7 @@ class TripServiceTest extends TestCase
         $this->user_builder->getTripService()->getTripsByUser($this->user_builder->getFriend());
     }
 
-    public function test_should_return_an_empty_list_when_user_has_no_friends()
+    public function test_should_return_no_trips_when_user_has_no_friends()
     {
         $this->user_builder->createMainUser()
             ->createOtherUser()

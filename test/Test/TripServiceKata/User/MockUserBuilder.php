@@ -32,7 +32,7 @@ class MockUserBuilder
 
 
     /**
-     * @return \Test\TripServiceKata\Trip\MockUserBuilder
+     * @return MockUserBuilder
      */
     public function createMainUser(): MockUserBuilder
     {
