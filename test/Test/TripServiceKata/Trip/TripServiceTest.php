@@ -24,7 +24,7 @@ class TripServiceTest extends TestCase
 
         $this->expectException(UserNotLoggedInException::class);
 
-        $this->user_builder->getTripService()->getTripsByUser($this->user_builder->getFriend());
+        $this->user_builder->getTripService()->getTripsByUser($this->user_builder->getFriend(), $this->user_builder->getUser());
     }
 
     public function test_should_return_no_trips_when_user_has_no_friends()
@@ -34,7 +34,7 @@ class TripServiceTest extends TestCase
             ->dontCreateFriendship()
             ->bind();
 
-        $trip_list = $this->user_builder->getTripService()->getTripsByUser($this->user_builder->getFriend());
+        $trip_list = $this->user_builder->getTripService()->getTripsByUser($this->user_builder->getFriend(), $this->user_builder->getUser());
 
         $this->assertEmpty($trip_list);
     }
@@ -47,7 +47,7 @@ class TripServiceTest extends TestCase
             ->createTrips(new Trip())
             ->bind();
 
-        $trip_list = $this->user_builder->getTripService()->getTripsByUser($this->user_builder->getFriend());
+        $trip_list = $this->user_builder->getTripService()->getTripsByUser($this->user_builder->getFriend(), $this->user_builder->getUser());
 
         $this->assertEquals($this->user_builder->getTrips(), $trip_list);
     }
@@ -60,7 +60,7 @@ class TripServiceTest extends TestCase
             ->createTrips(new Trip(), new Trip())
             ->bind();
 
-        $trip_list = $this->user_builder->getTripService()->getTripsByUser($this->user_builder->getFriend());
+        $trip_list = $this->user_builder->getTripService()->getTripsByUser($this->user_builder->getFriend(), $this->user_builder->getUser());
 
         $this->assertEquals($this->user_builder->getTrips(), $trip_list);
     }

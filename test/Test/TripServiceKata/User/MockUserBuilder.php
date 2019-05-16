@@ -52,16 +52,6 @@ class MockUserBuilder
     /**
      * @return MockUserBuilder
      */
-    public function logUserInService(): MockUserBuilder
-    {
-        $this->tripService = \Mockery::mock(TripService::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->tripService->shouldReceive('getLoggedUser')->andReturn($this->user);
-        return $this;
-    }
-
-    /**
-     * @return MockUserBuilder
-     */
     public function createFriendship(): MockUserBuilder
     {
         $this->friend->shouldReceive('getFriends')->andReturn([$this->user]);
@@ -95,7 +85,6 @@ class MockUserBuilder
     public function bind()
     {
         $this->tripService = \Mockery::mock(TripService::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->tripService->shouldReceive('getLoggedUser')->andReturn($this->user);
         if (!empty($this->trips)) {
             $this->tripService->shouldReceive('findTripsByUser')->withArgs([$this->friend])->andReturn($this->trips);
         }
@@ -131,9 +120,9 @@ class MockUserBuilder
     }
 
     /**
-     * @return User
+     * @return User|null
      */
-    public function getUser(): User
+    public function getUser(): ?User
     {
         return $this->user;
     }
