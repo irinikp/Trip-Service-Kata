@@ -55,7 +55,7 @@ class MockUserBuilder
      */
     public function createFriendship(): MockUserBuilder
     {
-        $this->friend->shouldReceive('getFriends')->andReturn([$this->user]);
+        $this->friend->shouldReceive('isFriendWith')->withArgs([$this->user])->andReturn(true);
         return $this;
     }
 
@@ -64,7 +64,7 @@ class MockUserBuilder
      */
     public function dontCreateFriendship(): MockUserBuilder
     {
-        $this->friend->shouldReceive('getFriends')->andReturn([]);
+        $this->friend->shouldReceive('isFriendWith')->withArgs([$this->user])->andReturn(false);
         return $this;
     }
 

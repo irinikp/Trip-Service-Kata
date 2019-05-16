@@ -81,4 +81,16 @@ class User
     {
         array_push($this->trips, $trip);
     }
+
+    /**
+     * @param User|null $friend
+     *
+     * @return bool
+     */
+    public function isFriendWith(?User $friend): bool
+    {
+        return (null === $friend) ?
+            false :
+            contains($this->getFriends(), $friend);
+    }
 }

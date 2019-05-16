@@ -2,9 +2,8 @@
 
 namespace TripServiceKata\Trip;
 
-use TripServiceKata\User\User;
-use TripServiceKata\User\UserSession;
 use TripServiceKata\Exception\UserNotLoggedInException;
+use TripServiceKata\User\User;
 
 class TripService
 {
@@ -20,18 +19,10 @@ class TripService
         if ($loggedInUser === null) {
             throw new UserNotLoggedInException();
         }
-        return $this->areFriends($user, $loggedInUser) ? $this->trip_dao->tripsByUser($user) : $this->noTrips();
+        return $user->isFriendWith($loggedInUser) ?
+            $this->trip_dao->tripsByUser($user) :
+            $this->noTrips();
     }
-
-//    /**
-//     * @param User $user
-//     *
-//     * @return array<Trip>
-//     */
-//    protected function findTripsByUser(User $user): array
-//    {
-//        return $this->trip_dao->tripsByUser($user);
-//    }
 
     /**
      * @param User      $user1
