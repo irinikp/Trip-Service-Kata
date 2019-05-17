@@ -14,13 +14,13 @@ class TripService
         $this->trip_dao = $trip_dao;
     }
 
-    public function getTripsByUser(User $user, ?User $loggedInUser)
+    public function getFriendsTrips(User $friend, ?User $loggedInUser)
     {
         if ($loggedInUser === null) {
             throw new UserNotLoggedInException();
         }
-        return $user->isFriendWith($loggedInUser) ?
-            $this->trip_dao->tripsByUser($user) :
+        return $friend->isFriendWith($loggedInUser) ?
+            $this->trip_dao->tripsByUser($friend) :
             $this->noTrips();
     }
 

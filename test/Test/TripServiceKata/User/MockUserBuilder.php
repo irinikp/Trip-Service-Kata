@@ -17,7 +17,7 @@ class MockUserBuilder
     /**
      * @var User
      */
-    protected $user;
+    protected $logged_in_user;
     /**
      * @var LegacyMockInterface
      */
@@ -35,9 +35,9 @@ class MockUserBuilder
     /**
      * @return MockUserBuilder
      */
-    public function createMainUser(): MockUserBuilder
+    public function createLoggedInUser(): MockUserBuilder
     {
-        $this->user = new User();
+        $this->logged_in_user = new User();
         return $this;
     }
 
@@ -46,7 +46,7 @@ class MockUserBuilder
      */
     public function createGuestUser(): MockUserBuilder
     {
-        $this->user = self::GUEST;
+        $this->logged_in_user = self::GUEST;
         return $this;
     }
 
@@ -55,7 +55,7 @@ class MockUserBuilder
      */
     public function createFriendship(): MockUserBuilder
     {
-        $this->friend->shouldReceive('isFriendWith')->withArgs([$this->user])->andReturn(true);
+        $this->friend->shouldReceive('isFriendWith')->withArgs([$this->logged_in_user])->andReturn(true);
         return $this;
     }
 
@@ -64,7 +64,7 @@ class MockUserBuilder
      */
     public function dontCreateFriendship(): MockUserBuilder
     {
-        $this->friend->shouldReceive('isFriendWith')->withArgs([$this->user])->andReturn(false);
+        $this->friend->shouldReceive('isFriendWith')->withArgs([$this->logged_in_user])->andReturn(false);
         return $this;
     }
 
@@ -86,11 +86,9 @@ class MockUserBuilder
     public function bind()
     {
         $trip_dao = \Mockery::mock(TripDAO::class);
-        if (!empty($this->trips)) {
-            $trip_dao->shouldReceive('tripsByUser')->withArgs([$this->friend])->andReturn($this->trips);
-        }
+        $trip_dao->shouldReceive('tripsByUser')->withArgs([$this->friend])->andReturn($this->trips);
         $this->tripService = new TripService($trip_dao);
-        return $this->user;
+        return $this->logged_in_user;
     }
 
     /**
@@ -126,17 +124,17 @@ class MockUserBuilder
     /**
      * @return User|null
      */
-    public function getUser(): ?User
+    public function getLoggedInUser(): ?User
     {
-        return $this->user;
+        return $this->logged_in_user;
     }
 
     /**
      * @param User $user
      */
-    public function setUser($user): void
+    public function setLoggedInUser($user): void
     {
-        $this->user = $user;
+        $this->logged_in_user = $user;
     }
 
     /**
