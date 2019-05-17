@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Test\TripServiceKata\User\MockUserBuilder;
 use TripServiceKata\Exception\UserNotLoggedInException;
 use TripServiceKata\Trip\Trip;
+use TripServiceKata\User\User;
 
 require __DIR__ . '/../../../../vendor/autoload.php';
 
@@ -28,6 +29,17 @@ class TripServiceTest extends TestCase
     }
 
     public function test_should_return_no_trips_when_user_has_no_friends()
+    {
+        $this->user_builder->createMainUser()
+        ->bind();
+        $no_friend = new User();
+
+        $trip_list = $this->user_builder->getTripService()->getTripsByUser($no_friend, $this->user_builder->getUser());
+
+        $this->assertEmpty($trip_list);
+    }
+
+    public function test_should_return_no_trips_when_user_is_not_friend_with_logged_in_user()
     {
         $this->user_builder->createMainUser()
             ->createOtherUser()
